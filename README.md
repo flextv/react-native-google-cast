@@ -8,7 +8,7 @@ This library wraps the native Google Cast SDK v3 for Android and iOS, providing 
 ## Getting started
 
 ```
-$ npm install react-native-google-cast --save
+$ npm install flextv/react-native-google-cast --save
 $ react-native link react-native-google-cast
 ```
 
