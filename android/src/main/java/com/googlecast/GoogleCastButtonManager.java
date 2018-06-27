@@ -80,9 +80,28 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
             super.setRemoteIndicatorDrawable(d);
         }
 
-        public void applyTint(Integer color) {
-            Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
-            DrawableCompat.setTint(wrapDrawable, color);
+        public void applyTint(final Integer color) {
+
+            // mRemoteIndicatorDrawable is null when setRemoteIndicatorDrawable hasn't completed yet.
+            // we exectue a delayed loop here every 100ms for 10 iterations to attempt to change the color
+            // generally this happens within 1 iteration.
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                int totalAttemptsToChangeColor = 0;
+
+                @Override
+                public void run() {
+                    Log.e("run", String.valueOf(totalAttemptsToChangeColor));
+                    if (mRemoteIndicatorDrawable != null) {
+                        Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
+                        DrawableCompat.setTint(wrapDrawable, color);
+                    } else {
+                        if (totalAttemptsToChangeColor++ < 10)
+                            handler.postDelayed(this, 100);
+                    }
+
+                }
+            }, 100);
         }
     }
 }
