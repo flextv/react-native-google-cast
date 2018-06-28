@@ -6,6 +6,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.MediaRouteButton;
 import android.util.AttributeSet;
 import android.view.View;
+import android.os.Handler;
 
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
