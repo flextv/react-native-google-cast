@@ -91,7 +91,6 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
 
                 @Override
                 public void run() {
-                    Log.e("run", String.valueOf(totalAttemptsToChangeColor));
                     if (mRemoteIndicatorDrawable != null) {
                         Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
                         DrawableCompat.setTint(wrapDrawable, color);
