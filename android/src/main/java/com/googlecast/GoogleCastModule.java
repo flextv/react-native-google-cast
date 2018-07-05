@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.facebook.react.GoogleCastActivity;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,6 +25,7 @@ import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.images.WebImage;
+import android.content.Context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,10 +53,18 @@ public class GoogleCastModule
     private CastSession mCastSession;
     private SessionManagerListener<CastSession> mSessionManagerListener;
 
+    /*
+    'isCastAvailable' is volatile because 'initializeCast' is called on the main thread, but
+    react-native modules may be initialized on any thread.
+    */
+    private static volatile boolean isCastAvailable = true;
+
     public GoogleCastModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        reactContext.addLifecycleEventListener(this);
-        setupCastListener();
+        if (isCastAvailable) {
+            reactContext.addLifecycleEventListener(this);
+            setupCastListener();
+        }
     }
 
     @Override
@@ -78,6 +88,8 @@ public class GoogleCastModule
         constants.put("MEDIA_STATUS_UPDATED", MEDIA_STATUS_UPDATED);
         constants.put("MEDIA_PLAYBACK_STARTED", MEDIA_PLAYBACK_STARTED);
         constants.put("MEDIA_PLAYBACK_ENDED", MEDIA_PLAYBACK_ENDED);
+
+        constants.put("CAST_AVAILABLE", isCastAvailable);
 
         return constants;
     }
@@ -269,5 +281,13 @@ public class GoogleCastModule
 
     protected void runOnUiQueueThread(Runnable runnable) {
         getReactApplicationContext().runOnUiQueueThread(runnable);
+    }
+
+    public static void initializeCast(Context context){
+        try {
+            CastContext.getSharedInstance(context);
+        } catch(Exception e) {
+            isCastAvailable = false;
+        }
     }
 }
