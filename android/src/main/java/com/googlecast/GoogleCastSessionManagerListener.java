@@ -1,5 +1,7 @@
 package com.googlecast;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 
@@ -32,7 +34,10 @@ public class GoogleCastSessionManagerListener implements SessionManagerListener<
     @Override
     public void onSessionStarted(CastSession session, String sessionId) {
         onApplicationConnected(session);
-        module.emitMessageToRN(GoogleCastModule.SESSION_STARTED, null);
+
+        WritableMap params = Arguments.createMap();
+        params.putString("friendlyName", session.getCastDevice().getFriendlyName());
+        module.emitMessageToRN(GoogleCastModule.SESSION_STARTED, params);
     }
 
     @Override

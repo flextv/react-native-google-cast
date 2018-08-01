@@ -18,6 +18,7 @@ import com.google.android.gms.cast.framework.CastStateListener;
 public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton> {
 
     public static final String REACT_CLASS = "RNGoogleCastButton";
+    private Integer mColor = null;
 
     @Override
     public String getName() {
@@ -47,6 +48,7 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
     public void setTintColor(ColorableMediaRouteButton button, Integer color) {
         if (color == null) return;
         button.applyTint(color);
+        mColor = color;
     }
 
     private void updateButtonState(MediaRouteButton button, int state) {
@@ -78,9 +80,12 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
         public void setRemoteIndicatorDrawable(Drawable d) {
             mRemoteIndicatorDrawable = d;
             super.setRemoteIndicatorDrawable(d);
+            if (mColor != null) applyTint(mColor);
         }
 
         public void applyTint(Integer color) {
+            if (mRemoteIndicatorDrawable == null) return;
+
             Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
             DrawableCompat.setTint(wrapDrawable, color);
         }
