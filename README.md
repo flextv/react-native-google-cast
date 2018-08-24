@@ -77,6 +77,10 @@ GoogleCast.castMedia({
   studio: 'Blender Foundation',
   streamDuration: 596, // seconds
   playPosition: 10, // seconds
+  captionUrl: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt',
+  captionName: 'Português',
+  captionLanguage: 'pt-BR',
+  captionColor: '#FFFF00'
 });
 ```
 
