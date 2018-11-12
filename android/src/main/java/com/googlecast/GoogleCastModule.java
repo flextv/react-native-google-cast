@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.graphics.Color;
 
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
@@ -16,7 +17,9 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.annotations.VisibleForTesting;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaTrack;
 import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.TextTrackStyle;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
@@ -27,6 +30,8 @@ import com.google.android.gms.common.images.WebImage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GoogleCastModule
         extends ReactContextBaseJavaModule implements LifecycleEventListener {
@@ -145,6 +150,33 @@ public class GoogleCastModule
         if (params.hasKey("duration")) {
             builder = builder.setStreamDuration(params.getInt("duration"));
         }
+
+        if (params.hasKey("captionUrl") && params.getString("captionUrl") != null) {
+            MediaTrack track = new MediaTrack.Builder(0, MediaTrack.TYPE_TEXT)
+            .setContentId(params.getString("captionUrl"))
+            .setSubtype(MediaTrack.SUBTYPE_SUBTITLES)
+            .setContentType("ISO-8859-1")
+            .setLanguage(params.getString("captionLanguage"))
+            .setName(params.getString("captionName"))
+            .build();
+
+            List<MediaTrack> mediaTracks = new ArrayList<>(); 
+            mediaTracks.add(track); 
+
+            builder = builder.setMediaTracks(mediaTracks);
+        }
+
+        if (params.hasKey("captionColor") && params.getString("captionColor") != null) {
+            	TextTrackStyle textTrackStyle = new TextTrackStyle();
+                textTrackStyle.setBackgroundColor(Color.parseColor("#01000000"));
+                textTrackStyle.setForegroundColor(Color.parseColor(params.getString("captionColor")));
+                textTrackStyle.setEdgeType(TextTrackStyle.EDGE_TYPE_OUTLINE);
+                textTrackStyle.setEdgeColor(Color.BLACK);
+                textTrackStyle.setFontGenericFamily(TextTrackStyle.FONT_FAMILY_SANS_SERIF);
+
+                builder = builder.setTextTrackStyle(textTrackStyle);
+        }
+
 
         return builder.build();
     }
