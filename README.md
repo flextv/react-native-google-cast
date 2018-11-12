@@ -72,13 +72,17 @@ import GoogleCast, { CastButton } from 'react-native-google-cast';
 
 // Stream the media to the connected Chromecast
 GoogleCast.castMedia({
-  mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4',
-  imageUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/images/480x270/BigBuckBunny.jpg',
-  title: 'Big Buck Bunny',
-  subtitle: 'A large and lovable rabbit deals with three tiny bullies, led by a flying squirrel, who are determined to squelch his happiness.',
-  studio: 'Blender Foundation',
-  streamDuration: 596, // seconds
+  mediaUrl: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4',
+  imageUrl: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg',
+  title: 'View From A Blue Moon',
+  subtitle: 'See the sport of surfing as it’s never been captured before in John Florence and Blake Vincent Kueny’s second signature release, in association with award-winning film studio, Brain Farm.',
+  studio: 'Brain Farm',
+  streamDuration: 30, // seconds
   playPosition: 10, // seconds
+  captionUrl: 'https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt',
+  captionName: 'English',
+  captionLanguage: 'en',
+  captionColor: '#FFFF00'
 });
 ```
 
