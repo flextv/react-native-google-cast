@@ -6,7 +6,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.MediaRouteButton;
 import android.util.AttributeSet;
 import android.view.View;
-import android.os.Handler;
 
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -19,6 +18,7 @@ import com.google.android.gms.cast.framework.CastStateListener;
 public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton> {
 
     public static final String REACT_CLASS = "RNGoogleCastButton";
+    private Integer mColor = null;
 
     @Override
     public String getName() {
@@ -48,6 +48,7 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
     public void setTintColor(ColorableMediaRouteButton button, Integer color) {
         if (color == null) return;
         button.applyTint(color);
+        mColor = color;
     }
 
     private void updateButtonState(MediaRouteButton button, int state) {
@@ -79,29 +80,14 @@ public class GoogleCastButtonManager extends SimpleViewManager<MediaRouteButton>
         public void setRemoteIndicatorDrawable(Drawable d) {
             mRemoteIndicatorDrawable = d;
             super.setRemoteIndicatorDrawable(d);
+            if (mColor != null) applyTint(mColor);
         }
 
-        public void applyTint(final Integer color) {
+        public void applyTint(Integer color) {
+            if (mRemoteIndicatorDrawable == null) return;
 
-            // mRemoteIndicatorDrawable is null when setRemoteIndicatorDrawable hasn't completed yet.
-            // we exectue a delayed loop here every 100ms for 10 iterations to attempt to change the color
-            // generally this happens within 1 iteration.
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                int totalAttemptsToChangeColor = 0;
-
-                @Override
-                public void run() {
-                    if (mRemoteIndicatorDrawable != null) {
-                        Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
-                        DrawableCompat.setTint(wrapDrawable, color);
-                    } else {
-                        if (totalAttemptsToChangeColor++ < 10)
-                            handler.postDelayed(this, 100);
-                    }
-
-                }
-            }, 100);
+            Drawable wrapDrawable = DrawableCompat.wrap(mRemoteIndicatorDrawable);
+            DrawableCompat.setTint(wrapDrawable, color);
         }
     }
 }
